@@ -9,7 +9,7 @@
             <el-input prefix-icon="iconfont icon-user" v-model="logRuleForm.username" ></el-input>
           </el-form-item>
           <el-form-item  prop="password">
-            <el-input prefix-icon="iconfont icon-3702mima" v-model="logRuleForm.password"></el-input>
+            <el-input show-password prefix-icon="iconfont icon-3702mima" v-model="logRuleForm.password"></el-input>
           </el-form-item>
           <el-form-item class="logbtn">
             <el-button type="primary" @click="submitForm('logRuleForm')">登录</el-button>
@@ -22,34 +22,44 @@
 
 <script>
 export default {
-  data () {
-    return {
-      logRuleForm: {},
-      rules: {
+  data(){
+    return{
+      logRuleForm:{
+        username:'',
+        password:'',
+      },
+      rules:{
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
+            { required: true, message: '请输入用户名', trigger: 'blur' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ]
-      }
+            { required: true, message: '请输入密码', trigger: 'blur' },
+            { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+          ],
+      },
     }
   },
-  methods: {
-    submitForm (data) {
-      this.$refs[data].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+  methods:{
+    submitForm(data){
+      this.$refs[data].validate(async(valid) => {
+          if (valid) {
+            const {data:res} = await this.$http.post('login',this.logRuleForm);
+            if(res.meta.status!==200){
+              this.$message.error('登录失败！')
+            }else{
+              // 将登陆成功后的token令牌保存在sessionStorage
+              window.sessionStorage.setItem('token',res.data.token);
+              //跳转
+              this.$router.push('/home')
+            }
+          } else {
+            return false;
+          }
+        });
     },
-    resetForm (data) {
-      this.$refs[data].resetFields()
+    resetForm(data){
+      this.$refs[data].resetFields();
     }
   }
 }
@@ -89,8 +99,8 @@ height: 300px;
   margin-top: 90px;
 }
 .logo img{
-  width:120px;
-  height: 120px;
+  width:110px;
+  height: 110px;
   background-color: #EEEEEE;
   border-radius: 50%;
 }
