@@ -42,49 +42,49 @@
 
 <script>
 export default {
-  data(){
-    return{
+  data () {
+    return {
       isCollapse: false,
-      menuData:[],//商品列表数据
-      iconsObj:{
-                '125':'iconfont icon-user',
-                '103':'iconfont icon-tijikongjian',
-                '101':'iconfont icon-shangpin',
-                '102':'iconfont icon-danju',
-                '145':'iconfont icon-baobiao',
-     },
-     activeURL:'',//当前激活的URL
+      menuData: [], // 商品列表数据
+      iconsObj: {
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
+      },
+      activeURL: ''// 当前激活的URL
     }
   },
-  created(){
-    this.getMenu();
+  created () {
+    this.getMenu()
   },
-  updated(){
+  updated () {
     this.activeURL = window.sessionStorage.getItem('activeURL')
   },
-  methods:{
-    saveNavState(url){
-      window.sessionStorage.setItem('activeURL',url)
+  methods: {
+    saveNavState (url) {
+      window.sessionStorage.setItem('activeURL', url)
     },
-    handleOpen(){
+    handleOpen () {
 
     },
-    handleClose(){
+    handleClose () {
 
     },
-    async getMenu(){
-      const {data:res} = await this.$http.get('menus');
-      if(res.meta.status!==200){
+    async getMenu () {
+      const { data: res } = await this.$http.get('menus')
+      if (res.meta.status !== 200) {
         return this.$message.error(res.meta.msg)
       }
       this.menuData = res.data
     },
-    exit(){
+    exit () {
       window.sessionStorage.clear()
       this.$router.push('/login')
     },
-    SS(){
-      this.isCollapse = !this.isCollapse;
+    SS () {
+      this.isCollapse = !this.isCollapse
     }
   }
 }

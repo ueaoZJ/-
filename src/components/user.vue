@@ -152,140 +152,139 @@
 
 <script>
 export default {
-  data(){
-    return{
-      //角色
+  data () {
+    return {
+      // 角色
       options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value: '',
-      //分配
-      allotdialogVisible:false,
-      allotData:{
-        username:'',
-        role_name:'',
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      value: '',
+      // 分配
+      allotdialogVisible: false,
+      allotData: {
+        username: '',
+        role_name: ''
       },
-      //修改
-      setdialogVisible:false,
-      setRuleForm:{
-        id:'',
-        username:'',
-        email:'',
-        mobile:''
+      // 修改
+      setdialogVisible: false,
+      setRuleForm: {
+        id: '',
+        username: '',
+        email: '',
+        mobile: ''
       },
-      //添加
+      // 添加
       adddialogVisible: false,
-      addRuleForm:{
-        username:'',
-        password:'',
-        email:'',
-        mobile:''
+      addRuleForm: {
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
       },
       rules: {
-          username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
-          ],
-          email: [
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-          ],
-          mobile: [
-            { required: true, message: '请输入手机号码', trigger: 'blur' },
-          ],
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 10, message: '长度在 6 到 10 个字符', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+        ]
 
       },
-      //总数
-      total:0,
-      queryInfo:{
-        //关键字，可以为孔
-        query:'',
+      // 总数
+      total: 0,
+      queryInfo: {
+        // 关键字，可以为孔
+        query: '',
         // 当前页码
-        pagenum:1,
+        pagenum: 1,
         // 每页的数据
-        pagesize:2,
+        pagesize: 2
       },
-      userSearch:'',
-      userData:[],
-      userSwitch:'',
+      userSearch: '',
+      userData: [],
+      userSwitch: ''
 
     }
   },
-  methods:{
+  methods: {
     //
-    allot(data){
+    allot (data) {
       this.allotdialogVisible = true
       this.allotData = data
-      console.log('dd:',data)
+      console.log('dd:', data)
     },
-    allotTrue(){
-
+    allotTrue () {
       this.allotdialogVisible = false
     },
-    //删除
-    async deleted(id) {
-        const result =await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(async() => {
-          const {data:res} = await this.$http.delete('users/'+id)
-          if(res.meta.status!==200){
-              return this.$message.error('删除用户失败!')
-          }
-          this.$message.success('删除用户成功！')
-          this.getUserList()
-        }).catch(err=>{
-            return err
-          }
-        );
-        // if(result !=='confirm'){
-        //   return this.$message.info('已经取消删除')
-        // }
-        // const {data:res} = await this.$http.delete('users/'+id)
-        // if(res.meta.status!==200){
-        //     return this.$message.error('删除用户失败!')
-        // }
-        // this.$message.success('删除用户成功！')
-        // this.getUserList()
-      },
-    //修改
-    setclick(res){
-      this.setdialogVisible=true
+    // 删除
+    async deleted (id) {
+      const result = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(async () => {
+        const { data: res } = await this.$http.delete('users/' + id)
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除用户失败!')
+        }
+        this.$message.success('删除用户成功！')
+        this.getUserList()
+      }).catch(err => {
+        return err
+      }
+      )
+      // if(result !=='confirm'){
+      //   return this.$message.info('已经取消删除')
+      // }
+      // const {data:res} = await this.$http.delete('users/'+id)
+      // if(res.meta.status!==200){
+      //     return this.$message.error('删除用户失败!')
+      // }
+      // this.$message.success('删除用户成功！')
+      // this.getUserList()
+    },
+    // 修改
+    setclick (res) {
+      this.setdialogVisible = true
       this.setRuleForm = res
     },
-    async set(){
-      const {data:res} = await this.$http.put(`users/${this.setRuleForm.id}`,{email:this.setRuleForm.email,mobile:this.setRuleForm.mobile})
-      if(res.meta.status !== 200){
-        this.setdialogVisible=false
+    async set () {
+      const { data: res } = await this.$http.put(`users/${this.setRuleForm.id}`, { email: this.setRuleForm.email, mobile: this.setRuleForm.mobile })
+      if (res.meta.status !== 200) {
+        this.setdialogVisible = false
         return this.$message.error('修改失败！')
       }
-      this.getUserList();
-      this.setdialogVisible=false
+      this.getUserList()
+      this.setdialogVisible = false
       return this.$message.success('修改成功！')
     },
-    //添加
-    async add(){
-      const {data:res} = await this.$http.post('users',this.addRuleForm)
-      if(res.meta.status !== 201){
+    // 添加
+    async add () {
+      const { data: res } = await this.$http.post('users', this.addRuleForm)
+      if (res.meta.status !== 201) {
         this.adddialogVisible = false
         return this.$message.error('添加用户失败')
       }
@@ -294,42 +293,42 @@ export default {
       return this.$message.success('用户添加成功')
     },
     //
-    async clickSearch(){
-      this.queryInfo.pagenum=1
-      const {data:res} = await this.$http.get('users',{params:this.queryInfo})
-      if(res.meta.status !== 200){
+    async clickSearch () {
+      this.queryInfo.pagenum = 1
+      const { data: res } = await this.$http.get('users', { params: this.queryInfo })
+      if (res.meta.status !== 200) {
         return this.$message.error('用户查询失败！')
       }
       this.total = res.data.total
-      this.userData = res.data.users;
+      this.userData = res.data.users
     },
-    async switchMT(userInfo){
-      const {data:res} = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
-      if(res.meta.status != 200){
+    async switchMT (userInfo) {
+      const { data: res } = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+      if (res.meta.status != 200) {
         return this.$message.error('状态改变失败！')
       }
       this.$message.success('状态改变成功！')
     },
     // 获取用户信息
-    async getUserList(){
-      const {data:res} = await this.$http.get('users',{params:this.queryInfo})
+    async getUserList () {
+      const { data: res } = await this.$http.get('users', { params: this.queryInfo })
       console.log(res)
-      if(res.meta.status!==200){
+      if (res.meta.status !== 200) {
         this.$message.error('获取用户列表数据失败！')
       }
       this.total = res.data.total
-      this.userData = res.data.users;
+      this.userData = res.data.users
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.queryInfo.pagesize = val
       this.getUserList()
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.queryInfo.pagenum = val
       this.getUserList()
     }
   },
-  created(){
+  created () {
     this.getUserList()
   }
 }

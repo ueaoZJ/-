@@ -22,44 +22,44 @@
 
 <script>
 export default {
-  data(){
-    return{
-      logRuleForm:{
-        username:'',
-        password:'',
+  data () {
+    return {
+      logRuleForm: {
+        username: '',
+        password: ''
       },
-      rules:{
+      rules: {
         username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
         password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
-          ],
-      },
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
-  methods:{
-    submitForm(data){
-      this.$refs[data].validate(async(valid) => {
-          if (valid) {
-            const {data:res} = await this.$http.post('login',this.logRuleForm);
-            if(res.meta.status!==200){
-              this.$message.error('登录失败！')
-            }else{
-              // 将登陆成功后的token令牌保存在sessionStorage
-              window.sessionStorage.setItem('token',res.data.token);
-              //跳转
-              this.$router.push('/home')
-            }
+  methods: {
+    submitForm (data) {
+      this.$refs[data].validate(async (valid) => {
+        if (valid) {
+          const { data: res } = await this.$http.post('login', this.logRuleForm)
+          if (res.meta.status !== 200) {
+            this.$message.error('登录失败！')
           } else {
-            return false;
+            // 将登陆成功后的token令牌保存在sessionStorage
+            window.sessionStorage.setItem('token', res.data.token)
+            // 跳转
+            this.$router.push('/home')
           }
-        });
+        } else {
+          return false
+        }
+      })
     },
-    resetForm(data){
-      this.$refs[data].resetFields();
+    resetForm (data) {
+      this.$refs[data].resetFields()
     }
   }
 }
