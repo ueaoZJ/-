@@ -82,6 +82,7 @@
     <el-dialog
       title="添加用户"
       :visible.sync="adddialogVisible"
+      @close="setRoleDialogClosed"
       width="50%">
       <el-form :model="addRuleForm" :rules="rules" ref="addRuleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="username">
@@ -132,12 +133,12 @@
       <p>当前的用户：{{allotData.username}}</p>
       <p>当前的角色：{{allotData.role_name}}</p>
       <p>分配新角色：
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="valuea" placeholder="请选择">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
           </el-option>
         </el-select>
       </p>
@@ -171,7 +172,7 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }],
-      value: '',
+      valuea: '',
       // 分配
       allotdialogVisible: false,
       allotData: {
@@ -229,13 +230,29 @@ export default {
     }
   },
   methods: {
-    //
-    allot (data) {
-      this.allotdialogVisible = true
-      this.allotData = data
-      console.log('dd:', data)
+    setRoleDialogClosed(){
+      this.addRuleForm={};
+      this.valuea='';
     },
-    allotTrue () {
+    //
+    async allot (dd) {
+      this.allotData = dd
+      const {data:res} = await this.$http.get('roles')
+      if(res.meta.status!==200){
+        return this.$message.error('获取角色信息失败！')
+      }
+      this.options = res.data
+      this.allotdialogVisible = true
+    },
+    async allotTrue () {
+      const {data:res}  = await this.$http.put(`users/${this.allotData.id}/role`,{rid:this.valuea})
+      console.log('val',this.valuea)
+      if(res.meta.status!==200){
+        this.allotdialogVisible = false
+        return this.$message.error('分配用户角色失败！')
+      }
+      this.$message.success('分配用户成功！')
+      this.getUserList()
       this.allotdialogVisible = false
     },
     // 删除
@@ -283,14 +300,17 @@ export default {
     },
     // 添加
     async add () {
-      const { data: res } = await this.$http.post('users', this.addRuleForm)
-      if (res.meta.status !== 201) {
+      this.$refs.addRuleForm.validate(async valid=>{
+        if(!valid) return this.$message.error('请按照要求填写信息')
+        const { data: res } = await this.$http.post('users', this.addRuleForm)
+        if (res.meta.status !== 201) {
+          this.adddialogVisible = false
+          return this.$message.error('添加用户失败')
+        }
+        this.getUserList()
         this.adddialogVisible = false
-        return this.$message.error('添加用户失败')
-      }
-      this.getUserList()
-      this.adddialogVisible = false
-      return this.$message.success('用户添加成功')
+        return this.$message.success('用户添加成功')
+      })
     },
     //
     async clickSearch () {

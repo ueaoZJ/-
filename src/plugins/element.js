@@ -6,9 +6,12 @@ import {
   Menu, MenuItem, MenuItemGroup, Submenu,
   Aside, Main, Breadcrumb, BreadcrumbItem,
   Table, TableColumn, Switch, Tooltip,
-  Pagination, Dialog, Select, Option
+  Pagination, Dialog, Select, Option,
+  Tag,Tree,
 } from 'element-ui'
+Vue.use(Tree)
 Vue.use(Button)
+Vue.use(Tag)
 Vue.use(Dialog)
 Vue.use(Select)
 Vue.use(Option)
